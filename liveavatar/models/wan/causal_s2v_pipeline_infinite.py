@@ -889,13 +889,7 @@ class WanS2V:
             m=(mask[0][0].detach().to(torch.float16).cpu().numpy()>0.5).astype(np.uint8)*255; Image.fromarray(m.squeeze()).save("tmp/mask/mask.png")
         else:
             audio_emb, nr = self.encode_audio(audio_path, infer_frames=infer_frames)
-            # print(f"nr: {nr}")
-            # print(f"audio_emb num clip: {audio_emb.shape[-1]//infer_frames}")
-            # assert audio_emb.shape[-1]//infer_frames == nr
-            # num_repeat_clip = 3334 // nr + 1 #10000 seconds
-            # print(f"num_repeat_clip: {num_repeat_clip}")
-            # nr = nr * num_repeat_clip
-            # audio_emb = torch.cat([audio_emb]*num_repeat_clip, dim=-1)
+
         
         self.audio_encoder.model.to("cpu")
         if num_repeat is None or num_repeat > nr:
