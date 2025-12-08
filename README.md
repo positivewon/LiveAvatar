@@ -84,18 +84,12 @@
 
 ### ⚙️ **Later updates**
 
-- ⬜ Optimized real-time streaming inference on RTX 4090 / A100 GPUs
-  - ⬜ Distribution-matching distillation to 3 steps
-  - ⬜ LightX2V VAE intergration
-  - ⬜ SVD quantization
-  - ⬜ SageAttention integration
-- ⬜ [Scope](https://github.com/daydreamlive/scope) integration for easily streaming interaction
-- ⬜ Highly optimized inference code support single GPU (offline generation)
-- ⬜ Highly optimized training code supporting DMD training on 8x A100 GPUs
-- ⬜ Run with very low VRAM
+- ⬜ UI integration for easily streaming interaction
+- ⬜ Inference code supporting single GPU (offline generation)
+- ⬜ Multi-character support
+- ⬜ Training code 
 - ⬜ TTS integration
-- ⬜ ComfyUI support
-- ⬜ 1.3B model
+- ⬜ LiveAvatar v1.1
 
 ## 🛠️ Installation
 
