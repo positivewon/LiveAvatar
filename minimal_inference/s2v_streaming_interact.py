@@ -319,6 +319,11 @@ def _parse_args():
         action="store_true",
         default=False,
         help="Whether to offload the KV cache to CPU.")
+    parser.add_argument(
+        "--enable_online_decode",
+        action="store_true",
+        default=False,
+        help="Whether to enable online decode.")
     args = parser.parse_args()
 
     _validate_args(args)
@@ -501,6 +506,7 @@ def generate(args, training_settings):
             num_gpus_dit=args.num_gpus_dit,
             enable_vae_parallel=args.enable_vae_parallel,
             input_video_for_sam2=None,
+            enable_online_decode=args.enable_online_decode,
         )
     else:
         assert False, "Only s2v is supported for now."

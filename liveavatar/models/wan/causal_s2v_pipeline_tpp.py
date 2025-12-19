@@ -686,6 +686,7 @@ class WanS2V:
         enable_vae_parallel=False,
         mask=None,
         input_video_for_sam2=None,
+        enable_online_decode=False,
     ):
         r"""
         Generates video frames from input image and text prompt using diffusion process.

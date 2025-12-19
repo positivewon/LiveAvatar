@@ -682,6 +682,7 @@ class WanS2V:
         enable_vae_parallel=False,
         mask=None,
         input_video_for_sam2=None,
+        enable_online_decode=False,
     ):
         r"""
         Generates video frames from input image and text prompt using diffusion process.
@@ -880,7 +881,8 @@ class WanS2V:
             0) * 2 - 1.0  # b c 1 h w
         ref_pixel_values = ref_pixel_values.to(
             dtype=self.vae.dtype, device=self.vae.device)
-        ref_latents = torch.stack(self.vae.encode(ref_pixel_values))
+        ref_pixel_values = ref_pixel_values.repeat(1, 1, 5, 1, 1)
+        ref_latents = torch.stack(self.vae.encode(ref_pixel_values))[:,:,1:]
 
         # drop_first_motion = self.drop_first_motion
         drop_first_motion = False
@@ -1003,7 +1005,7 @@ class WanS2V:
 
                 #-----------------------------------------------Temporal denoising loop in single clip---------------------------------
                 # 2.2.0 prefill cond caching
-                if r==0 or r==1:
+                if r==0 or (r==1 and enable_online_decode):
                     for gpu_id in range(4):
                         self._move_kv_cache_to_working_gpu(gpu_id+1) # move to gpu0
 
@@ -1094,7 +1096,7 @@ class WanS2V:
 
 
                 #----------------------------------------------Step 2.3: clip-level postprocess---------------------------------
-                if r == 0:
+                if r == 0 and enable_online_decode:
                     if offload_model:
                         print(f"offloading model to cpu, please wait...")
                         self.noise_model.cpu()
@@ -1137,15 +1139,16 @@ class WanS2V:
         if clip_outputs:
             if offload_model:
                 print(
-                    f"offloading DIT to cpu, loading VAE to cuda for final decode of remaining clips"
+                    f"loading VAE to cuda for final decode of remaining clips"
                 )
-                self.noise_model.cpu()
+                self.kv_cache1 = None
+                # self.noise_model.cpu()
                 self.vae.model.to(self.device)
                 torch.cuda.synchronize()
                 torch.cuda.empty_cache()
 
             motion_latents_pp = motion_latents
-            for clip_output_cpu in clip_outputs:
+            for clip_idx, clip_output_cpu in enumerate(clip_outputs):
                 clip_output = clip_output_cpu.to(
                     device=self.vae.device, dtype=self.vae.dtype
                 )
@@ -1155,6 +1158,9 @@ class WanS2V:
 
                 image = torch.stack(self.vae.decode(decode_latents))
                 image = image[:, :, -(infer_frames):]
+                
+                if not enable_online_decode and clip_idx == 0:
+                    image = image[:, :, 3:]
 
                 overlap_frames_num = min(self.motion_frames, image.shape[2])
                 videos_last_frames = torch.cat(

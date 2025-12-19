@@ -10,21 +10,21 @@
 
 <p>
 <a href="https://github.com/Yubo-Shankui" style="color: inherit;">Yubo Huang</a><sup>1,2</sup> ·
-<a href="#" style="color: inherit;">Hailong Guo</a><sup>1,3</sup> ·
-<a href="#" style="color: inherit;">Fangtai Wu</a><sup>1,4</sup> ·
-<a href="#" style="color: inherit;">Shifeng Zhang</a><sup>1</sup> ·
-<a href="#" style="color: inherit;">Shijie Huang</a><sup>1</sup> ·
+<a href="#" style="color: inherit;">Hailong Guo</a><sup>2,3</sup> ·
+<a href="#" style="color: inherit;">Fangtai Wu</a><sup>2,4</sup> ·
+<a href="#" style="color: inherit;">Shifeng Zhang</a><sup>2</sup> ·
+<a href="#" style="color: inherit;">Shijie Huang</a><sup>2</sup> ·
 <a href="#" style="color: inherit;">Qijun Gan</a><sup>4</sup> ·
-<a href="#" style="color: inherit;">Lin Liu</a><sup>2</sup> ·
-<a href="#" style="color: inherit;">Sirui Zhao</a><sup>2,*</sup> ·
-<a href="http://staff.ustc.edu.cn/~cheneh/" style="color: inherit;">Enhong Chen</a><sup>2,*</sup> ·
-<a href="https://openreview.net/profile?id=%7EJiaming_Liu7" style="color: inherit;">Jiaming Liu</a><sup>1,‡</sup> ·
-<a href="https://sites.google.com/view/stevenhoi/" style="color: inherit;">Steven Hoi</a><sup>1</sup>
+<a href="#" style="color: inherit;">Lin Liu</a><sup>1</sup> ·
+<a href="#" style="color: inherit;">Sirui Zhao</a><sup>1,*</sup> ·
+<a href="http://staff.ustc.edu.cn/~cheneh/" style="color: inherit;">Enhong Chen</a><sup>1,*</sup> ·
+<a href="https://openreview.net/profile?id=%7EJiaming_Liu7" style="color: inherit;">Jiaming Liu</a><sup>2,‡</sup> ·
+<a href="https://sites.google.com/view/stevenhoi/" style="color: inherit;">Steven Hoi</a><sup>2</sup>
 </p>
 
 <p style="font-size: 0.9em;">
-<sup>1</sup> Alibaba Group &nbsp;&nbsp;
-<sup>2</sup> University of Science and Technology of China &nbsp;&nbsp;
+<sup>1</sup> University of Science and Technology of China &nbsp;&nbsp;
+<sup>2</sup> Alibaba Group &nbsp;&nbsp;
 <sup>3</sup> Beijing University of Posts and Telecommunications &nbsp;&nbsp;
 <sup>4</sup> Zhejiang University
 </p>
@@ -63,6 +63,8 @@
 
 ---
 ## 📰 News
+- **[2025.12.16]** 🎉 LiveAvatar has reached 1,000+ stars on GitHub! Thank you to the community for the incredible support! ⭐
+- **[2025.12.12]** 🚀 We released single-gpu inference [Code](infinite_inference_single_gpu.sh) — no need for 5×H100 (house-priced server), a single 80GB VRAM GPU is enough to enjoy. 
 - **[2025.12.08]** 🚀 We released real-time inference [Code](infinite_inference_multi_gpu.sh) and the model [Weight](https://huggingface.co/Quark-Vision/Live-Avatar).
 - **[2025.12.08]** 🎉 LiveAvatar won the Hugging Face [#1 Paper of the day](https://huggingface.co/papers/date/2025-12-05)!
 - **[2025.12.04]** 🏃‍♂️ We committed to open-sourcing the code in **early December**.
@@ -84,11 +86,11 @@
 
 ### ⚙️ **Later updates**
 
-- ⬜ UI integration for easily streaming interaction
-- ⬜ Inference code supporting single GPU (offline generation)
+- ✅ Inference code supporting single GPU (offline generation)
 - ⬜ Multi-character support
-- ⬜ Training code 
+- ⬜ UI integration for easily streaming interaction
 - ⬜ TTS integration
+- ⬜ Training code 
 - ⬜ LiveAvatar v1.1
 
 ## 🛠️ Installation
@@ -173,6 +175,18 @@ bash gradio_multi_gpu.sh
 Furthermore, we are planning to integrate the [LightX2V](https://github.com/ModelTC/LightX2V) VAE component. This integration will eliminate the dependency on additional single-GPU VAE parallelism and support 4-step inference within a 4-GPU setup.
 
 Please visit our [project page](https://liveavatar.github.io/) to see more examples and learn about the scenarios suitable for this model.
+### Single-GPU Inference
+> 💡 This command can run on a single GPU with at least 80GB VRAM.
+```bash
+# CLI Inference
+bash infinite_inference_single_gpu.sh
+# Gradio Web UI
+bash gradio_single_gpu.sh
+```
+
+> 💡 If you encounter OOM errors after multiple runs in the Gradio Web UI, please try lowering the resolution (the `size` parameter) as a temporary fix. We are actively developing enhanced single GPU memory optimization; track our progress in the "Later updates" section.
+
+> 💡 To avoid performance degradation caused by frequent CPU offloading, we set the `enable_online_decode` parameter to `false` by default in the single-GPU scripts. This may slightly reduce quality when generating extremely long videos; in such cases, consider adding `--enable_online_decode` to your inference command.
 ## 📝 Citation
 
 If you find this project useful for your research, please consider citing our paper:
